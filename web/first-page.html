@@ -1,0 +1,132 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="bower_components/paper-button/paper-button.html">
+<link rel="import" href="bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="bower_components/iron-image/iron-image.html">
+<link rel="import" href="bower_components/paper-card/paper-card.html">
+
+<link rel="import" href="bower_components/paper-radio-button/paper-radio-button.html">
+<link rel="import" href="bower_components/paper-radio-group/paper-radio-group.html">
+
+<dom-module id="first-page">
+    <style is="custom-style">
+
+        .paper-header {
+            height: 60px;
+            font-size: 16px;
+            line-height: 60px;
+            padding: 0 10px;
+            color: white;
+            transition: height 0.2s;
+            font-family: "Helvetica Neue";
+        }
+
+        .blue .paper-header {
+            background-color: var(--paper-light-blue-200);
+        }
+
+        .paper-button {
+            font-family: "Helvetica Neue";
+
+        }
+        .paper-button:hover {
+            color:white;
+            background-color:var(--paper-light-blue-200);
+        }
+        .card-content{
+
+            font-family: "Helvetica Neue";
+        }
+
+        .paper-input{
+            font-family: "Helvetica Neue";
+            --paper-input-container-underline:var(--paper-light-blue-200)
+        }
+
+
+    </style>
+    <template>
+        <paper-header-panel mode="waterfall-tall" class="blue">
+            <div class="paper-header">Capgemini Robot Barista</div>
+            <div class="content fit">
+                <paper-card image="./assets/coffee.jpg" class="fill">
+                    <div class="card-content">
+                        Fill in your name to order your coffee from the robot-barista.
+                    </div>
+                    <div class="card-actions" style="align-items: flex-start">
+                        <paper-input class="paper-input" label="your name" value="{{name}}"></paper-input>
+                        <div>
+                            <div>
+                                <label id="size">size:</label>
+                                <paper-radio-group selected="{{size}}" aria-labelledby="size">
+                                    <paper-radio-button name="small">Small</paper-radio-button>
+                                    <paper-radio-button name="large">Large</paper-radio-button>
+                                </paper-radio-group>
+                            </div>
+                            <div>
+                                <label id="milk">type:</label>
+                                <paper-radio-group selected="{{type}}" aria-labelledby="milk">
+                                    <paper-radio-button name="black">Black</paper-radio-button>
+                                    <paper-radio-button name="milk">With Milk</paper-radio-button>
+                                </paper-radio-group>
+                            </div>
+                        </div>
+                        <paper-button class="paper-button flex" noink on-tap="ordercoffee">place order</paper-button>
+                        <br>
+                        <br>
+                        <img src="assets/capgemini.png"/>
+                    </div>
+                </paper-card>
+
+            </div>
+
+        </paper-header-panel>
+
+
+
+
+        <iron-ajax id="ajax"
+                   url="./neworder"
+                   handle-as="json"
+                   method="POST"
+                   content-type="application/json"
+                   headers='{"X-Requested-With": "XMLHttpRequest"}'
+                   body="{{order}}"
+                   on-response="handleResponse"
+                   debounce-duration="300"
+        ></iron-ajax>
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is:'first-page',
+        properties:{
+            order:Object,
+            name:String,
+            type:{
+                type:String,
+                value:'black'
+            },
+            size:{
+                type:String,
+                value:'small'
+            }
+        },
+
+        ordercoffee: function(e){
+            if(this.name) {
+                this.order = {name: this.name, type: this.type, size:this.size}
+                this.$.ajax.generateRequest()
+
+            }
+        },
+        handleResponse: function(e){
+            this.fire('order-coffee', {name:this.name, type:this.type, size:this.size});
+        }
+    })
+</script>

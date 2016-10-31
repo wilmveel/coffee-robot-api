@@ -1,0 +1,37 @@
+
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="bower_components/iron-pages/iron-pages.html">
+
+<link rel="import" href="first-page.html">
+<link rel="import" href="second-page.html">
+
+<dom-module id="coffee-app">
+<template>
+    <iron-pages id="iron-pages" selected="0" >
+        <div><first-page></first-page></div>
+        <div><second-page name="{{name}}" type="{{type}}" size="{{size}}"></second-page></div>
+
+    </iron-pages>
+
+</template>
+</dom-module>
+
+<script>
+    Polymer({
+        is:'coffee-app',
+        properties:{
+            name:String,
+            type:String,
+            size:String
+        },
+        ready:function(){
+            document.addEventListener('order-coffee', function(e){
+                this.fire('coffee-for',e.detail)
+                var pages = document.querySelector('iron-pages')
+                pages.selectNext()
+            }.bind(this), true)
+        },
+
+
+    })
+</script>

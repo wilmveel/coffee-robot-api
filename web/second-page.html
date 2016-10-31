@@ -1,0 +1,105 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="bower_components/iron-signals/iron-signals.html">
+<link rel="import" href="bower_components/paper-button/paper-button.html">
+<link rel="import" href="bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="bower_components/paper-input/paper-input.html">
+
+<link rel="import" href="bower_components/iron-image/iron-image.html">
+<link rel="import" href="bower_components/paper-card/paper-card.html">
+
+<link rel="import" href="bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="bower_components/paper-item/paper-item.html">
+<dom-module id="second-page">
+    <template>
+        <style is="custom-style">
+
+            .paper-header {
+                height: 60px;
+                font-size: 16px;
+                line-height: 60px;
+                padding: 0 10px;
+                color: white;
+                transition: height 0.2s;
+                font-family: "Helvetica Neue";
+            }
+
+            .blue .paper-header {
+                background-color: var(--paper-light-blue-200);
+            }
+
+            .paper-button {
+                font-family: "Helvetica Neue";
+
+            }
+            .paper-button:hover {
+                color:white;
+                background-color:var(--paper-light-blue-200);
+            }
+            .card-content{
+
+                font-family: "Helvetica Neue";
+            }
+
+            .paper-input{
+                font-family: "Helvetica Neue";
+                --paper-input-container-underline:var(--paper-light-blue-200)
+            }
+
+
+        </style>
+
+            <paper-header-panel mode="waterfall-tall" class="blue">
+                <div class="paper-header">Capgemini Robot Barista</div>
+                <div class="content fit">
+                    <paper-card image="./assets/fry.gif"   class="white">
+                        <div class="card-content" style="font-family: 'Helvetica Neue'">
+                            <h3>{{name}}, your coffee will be served momentarily!</h3>
+                            <p>You ordered:</p>
+                            <paper-listbox>
+                                <paper-item disabled>size: {{size}}</paper-item>
+                                <paper-item disabled>type: {{type}}</paper-item>
+                            </paper-listbox>
+                        </div>
+                        <div class="card-actions" style="align-items: flex-start">
+
+
+                            <img src="assets/capgemini.png"/>
+                        </div>
+                    </paper-card>
+
+                </div>
+
+            </paper-header-panel>
+    </template>
+</dom-module>
+
+<script>
+    Polymer({
+        is:'second-page',
+        properties:{
+            name:{
+                type:String,
+                notify:true
+            },
+            size:{
+        type:String,
+                notify:true
+    },
+            type:{
+                type:String,
+                        notify:true
+            },
+        },
+        ready:function(){
+            document.addEventListener('coffee-for', function(e){
+                console.log('what', e.detail)
+                this.name =e.detail.name
+                this.type = e.detail.type
+                this.size = e.detail.size
+            }.bind(this),true)
+        },
+
+    })
+</script>
