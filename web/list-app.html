@@ -1,0 +1,126 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+
+<link rel="import" href="bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="bower_components/app-layout/app-toolbar/app-toolbar.html">
+
+<link rel="import" href="bower_components/paper-card/paper-card.html">
+
+<link rel="import" href="bower_components/iron-flex-layout/iron-flex-layout-classes.html">
+
+<link rel="import" href="bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="list-app">
+    <style is="custom-style" include="iron-flex iron-positioning iron-flex-alignment">
+
+        app-header {
+            background-color: #1992c5;
+            color: #fff;
+        }
+        .content {
+            @apply(--layout-flex);
+
+            margin:15px;
+
+
+
+
+        }
+
+
+        .paper-card {
+            --paper-card-header-image: {
+                width:100%;
+                height:300px;
+
+            };
+            --paper-card-header-image-text:{
+                font-size:60px;
+                color:white;
+                text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+                text-align:center;
+
+            };
+            --paper-card-header-text: {
+                text-align: center;
+            };
+            height:300px;
+
+        }
+
+
+        footer {
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            background-color: white;
+            font-size: 14px;
+        }
+    </style>
+    <template>
+        <app-header-layout fullbleed>
+
+            <app-header effects="waterfall" condenses reveals>
+
+                <app-toolbar></app-toolbar>
+                <app-toolbar>
+                    <div spacer main-title style="font-size:50px; text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;">Robot Barista Interface</div>
+                </app-toolbar>
+            </app-header>
+
+            <div class="content horizontal layout center-justified">
+
+                <paper-card class="paper-card" image="assets/coffeebeans.jpg"  heading="{{name}} YOUR COFFEE IS READY" class="white">
+                    <div class="card-content"></div>
+
+                </paper-card>
+
+
+            </div>
+
+            <footer>
+                <img src="assets/capgemini.png"/>
+
+            </footer>
+
+        </app-header-layout>
+
+        <iron-ajax id="ajax"
+                   url="./ready"
+                   handle-as="json"
+                   method="GET"
+                   content-type="application/json"
+                   headers='{"X-Requested-With": "XMLHttpRequest"}'
+
+                   on-response="handleResponse"
+                   debounce-duration="300"
+        ></iron-ajax>
+    </template>
+
+</dom-module>
+
+<script>
+    Polymer({
+        is:'list-app',
+        properties:{
+            name:{
+                type:String,
+                value:"new"
+            },
+
+        },
+        ready:function(){
+            this.$.ajax.generateRequest()
+        },
+        handleResponse:function(e){
+            if (this.name !== e.detail.__data__.response.name) {
+                this.name = e.detail.__data__.response.name.toUpperCase()
+                console.log(this.name)
+            }
+            this.$.ajax.generateRequest()
+
+        }
+
+
+    })
+</script>

@@ -18,7 +18,8 @@ app.use(bodyParser.urlencoded({extended:true}))
 app.use(bodyParser.json())
 
 var orders = [];
-
+var preparing='';
+var ready= '';
 
 app.post('/neworder', function(req, res){
 
@@ -30,12 +31,28 @@ app.post('/neworder', function(req, res){
 
 
 app.get('/takeorder', function(req, res){
+    var order = orders.shift()
+    preparing = order;
+    res.status(200).json( order)
 
-    res.json(200, orders.shift())
 })
 
 app.get('/stack', function(req, res){
-    res.json(200, orders)
+
+    res.status(200).json( orders)
+})
+
+app.post('/prepared', function(req,res){
+    ready = preparing;
+    res.sendStatus(200)
+})
+
+app.get('/ready', function(req, res){
+    res.status(200).json(ready)
+})
+
+app.get('/preparing', function(req, res){
+    res.status(200).json(preparing)
 })
 
 app.get('/stackview',function(req, res){
